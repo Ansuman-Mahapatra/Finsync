@@ -1,0 +1,42 @@
+package com.finsync.finance.service;
+
+import com.finsync.finance.model.Goal;
+import com.finsync.finance.model.AppUser;
+import com.finsync.finance.repository.GoalRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class GoalService {
+
+    @Autowired
+    private GoalRepository goalRepository;
+
+    public List<Goal> getGoals(AppUser appUser) {
+        return goalRepository.findByUser(appUser);
+    }
+
+    public Goal addGoal(AppUser user, Goal goal) {
+        goal.setUser(user);  // make sure goal belongs to the logged-in user
+        return goalRepository.save(goal);
+    }
+
+    public Goal updateGoal(Long id, Goal updatedGoal) {
+        Goal goal = goalRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Goal not found"));
+
+        goal.setGoalName(updatedGoal.getGoalName());
+        goal.setTargetAmount(updatedGoal.getTargetAmount());
+        goal.setSavedAmount(updatedGoal.getSavedAmount());
+
+        return goalRepository.save(goal);
+    }
+
+    public void deleteGoal(Long id) {
+        Goal goal = goalRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Goal not found"));
+        goalRepository.delete(goal);
+    }
+}

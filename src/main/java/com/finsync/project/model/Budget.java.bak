@@ -1,0 +1,74 @@
+package com.finsync.finance.model;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "budgets")
+public class Budget {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private double limitAmount;
+    private String duration;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private AppUser user;
+
+    // Default constructor
+    public Budget() {}
+
+    // Constructor with parameters
+    public Budget(double limitAmount, String duration, Category category, AppUser user) {
+        this.limitAmount = limitAmount;
+        this.duration = duration;
+        this.category = category;
+        this.user = user;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public double getLimitAmount() {
+        return limitAmount;
+    }
+
+    public void setLimitAmount(double limitAmount) {
+        this.limitAmount = limitAmount;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public AppUser getUser() {
+        return user;
+    }
+
+    public void setUser(AppUser user) {
+        this.user = user;
+    }
+}

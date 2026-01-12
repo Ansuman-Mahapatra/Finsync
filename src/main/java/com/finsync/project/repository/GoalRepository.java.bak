@@ -1,0 +1,11 @@
+package com.finsync.finance.repository;
+
+import com.finsync.finance.model.Goal;
+import com.finsync.finance.model.AppUser;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface GoalRepository extends JpaRepository<Goal, Long> {
+    List<Goal> findByUser(AppUser appUser);
+}

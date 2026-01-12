@@ -1,0 +1,53 @@
+package com.finsync.project.service;
+
+import com.finsync.project.model.AppUser;
+import com.finsync.project.payload.LoginRequest;
+import com.finsync.project.payload.RegisterRequest;
+import com.finsync.project.payload.JwtResponse;
+import com.finsync.project.repository.UserRepository;
+import com.finsync.project.security.JwtUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+public class AuthService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    public void register(RegisterRequest request) {
+        if (userRepository.findByPhone(request.getPhone()).isPresent()) {
+            throw new RuntimeException("AppUser already exists");
+        }
+
+        AppUser appUser = new AppUser(
+                request.getName(),
+                request.getEmail(),
+                request.getPhone(),
+                passwordEncoder.encode(request.getPassword()),
+                request.getUserType() != null ? request.getUserType() : "simple"
+        );
+
+        userRepository.save(appUser);
+    }
+
+    public JwtResponse login(LoginRequest request) {
+        AppUser appUser = userRepository.findByPhone(request.getPhone())
+                .orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
+
+        if (passwordEncoder.matches(request.getPassword(), appUser.getPassword())) {
+            String jwt = jwtUtil.generateToken(appUser.getPhone());
+            return new JwtResponse(jwt, appUser.getId(), appUser.getName(), appUser.getEmail(), appUser.getUserType());
+        }
+
+        throw new BadCredentialsException("Invalid credentials");
+    }
+}

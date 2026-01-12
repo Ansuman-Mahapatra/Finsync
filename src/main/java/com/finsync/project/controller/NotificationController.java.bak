@@ -1,0 +1,44 @@
+package com.finsync.finance.controller;
+
+import com.finsync.finance.model.AppUser;
+import com.finsync.finance.model.Notification;
+import com.finsync.finance.service.NotificationService;
+import com.finsync.finance.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/notifications")
+public class NotificationController {
+
+    @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    // ✅ GET: Fetch all notifications for a user
+    @GetMapping
+    public ResponseEntity<List<Notification>> getNotifications(@RequestParam Long userId) {
+        AppUser user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return ResponseEntity.ok(notificationService.getNotifications(user));
+    }
+
+    // ✅ POST: Create a new notification
+    @PostMapping
+    public ResponseEntity<Notification> addNotification(@RequestBody Notification notification) {
+        return ResponseEntity.ok(notificationService.addNotification(notification));
+    }
+
+    // ✅ DELETE: Delete notification by ID
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteNotification(@PathVariable Long id) {
+        notificationService.deleteNotification(id);
+        return ResponseEntity.ok("Notification deleted successfully!");
+    }
+}

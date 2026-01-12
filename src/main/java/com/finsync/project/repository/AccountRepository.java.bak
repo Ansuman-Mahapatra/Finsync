@@ -1,0 +1,13 @@
+package com.finsync.finance.repository;
+
+import com.finsync.finance.model.BankAccount;
+import com.finsync.finance.model.AppUser;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+import java.util.Optional;
+
+public interface AccountRepository extends JpaRepository<BankAccount, Long> {
+    List<BankAccount> findByUser(AppUser appUser);
+    Optional<BankAccount> findByAccountNumber(String accountNumber);
+}

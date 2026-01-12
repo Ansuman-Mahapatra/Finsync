@@ -1,0 +1,16 @@
+package com.finsync.finance.repository;
+
+import com.finsync.finance.model.Budget;
+import com.finsync.finance.model.AppUser;
+import com.finsync.finance.model.Category;
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+
+public interface BudgetRepository extends JpaRepository<Budget, Long> {
+
+    List<Budget> findByUser(AppUser user);
+
+    List<Budget> findByUserId(Long userId);
+
+    Budget findByUserAndCategory(AppUser user, Category category);
+}

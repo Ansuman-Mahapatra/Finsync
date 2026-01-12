@@ -1,0 +1,36 @@
+package com.finsync.finance.model;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "notifications")
+public class Notification {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String message;
+    private boolean readStatus = false;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private AppUser user;
+
+    public Notification() {}
+
+    public Notification(String message, boolean readStatus, AppUser appUser) {
+        this.message = message;
+        this.readStatus = readStatus;
+        this.user = appUser;
+    }
+
+    public Long getId() { return id; }
+    public String getMessage() { return message; }
+    public boolean isReadStatus() { return readStatus; }
+    public AppUser getUser() { return user; }
+
+    public void setId(Long id) { this.id = id; }
+    public void setMessage(String message) { this.message = message; }
+    public void setReadStatus(boolean readStatus) { this.readStatus = readStatus; }
+    public void setUser(AppUser appUser) { this.user = appUser; }
+}

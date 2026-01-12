@@ -1,0 +1,8 @@
+{
+  "userId": "test-user-id",
+  "amount": 250.75,
+  "description": "Grocery shopping at SuperMart",
+  "category": "Food & Dining",
+  "type": "expense",
+  "date": "2025-10-06T10:30:00"
+}

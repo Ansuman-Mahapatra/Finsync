@@ -1,0 +1,30 @@
+package com.finsync.finance.service;
+
+import com.finsync.finance.model.Notification;
+import com.finsync.finance.repository.NotificationRepository;
+import com.finsync.finance.model.AppUser;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class NotificationService {
+
+    @Autowired
+    private NotificationRepository notificationRepository;
+
+    public List<Notification> getNotifications(AppUser appUser) {
+        return notificationRepository.findByUser(appUser);
+    }
+
+    public Notification addNotification(Notification notification) {
+        return notificationRepository.save(notification);
+    }
+
+    public void deleteNotification(Long id) {
+        Notification notification = notificationRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Notification not found"));
+        notificationRepository.delete(notification);
+    }
+}

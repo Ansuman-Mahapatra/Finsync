@@ -1,0 +1,26 @@
+package com.finsync.finance.controller;
+
+import com.finsync.finance.model.AppUser;
+import com.finsync.finance.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/settings")
+public class SettingsController {
+
+    @Autowired
+    private UserService userService;
+
+    @PutMapping("/profile")
+    public ResponseEntity<AppUser> updateProfile(@RequestParam Long userId, @RequestBody AppUser updatedAppUser) {
+        return ResponseEntity.ok(userService.updateProfile(userId, updatedAppUser));
+    }
+
+    @PutMapping("/password")
+    public ResponseEntity<String> updatePassword(@RequestParam Long userId, @RequestParam String newPassword) {
+        userService.updatePassword(userId, newPassword);
+        return ResponseEntity.ok("Password updated successfully!");
+    }
+}

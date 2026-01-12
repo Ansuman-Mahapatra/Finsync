@@ -1,0 +1,30 @@
+package com.finsync.finance.payload;
+
+import java.util.Map;
+
+public class ReportResponse {
+    private String period; // e.g. "August 2025", "Week 35"
+    private double totalIncome;
+    private double totalExpense;
+    private Map<String, Double> categoryBreakdown;
+
+    public ReportResponse(String period, double totalIncome, double totalExpense, Map<String, Double> categoryBreakdown) {
+        this.period = period;
+        this.totalIncome = totalIncome;
+        this.totalExpense = totalExpense;
+        this.categoryBreakdown = categoryBreakdown;
+    }
+
+    public String getPeriod() {
+        return period;
+    }
+    public double getTotalIncome() {
+        return totalIncome;
+    }
+    public double getTotalExpense() {
+        return totalExpense;
+    }
+    public Map<String, Double> getCategoryBreakdown() {
+        return categoryBreakdown;
+    }
+}

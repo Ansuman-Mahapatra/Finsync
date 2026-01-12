@@ -1,0 +1,10 @@
+{
+  "name": "Electricity Bill",
+  "amount": 120.50,
+  "dueDate": "2025-10-15",
+  "category": "Utilities",
+  "status": "upcoming",
+  "recurring": true,
+  "recurringPeriod": "monthly",
+  "userId": "68e10e309715a1e406e0d89b"
+}

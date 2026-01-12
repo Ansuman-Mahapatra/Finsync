@@ -1,0 +1,50 @@
+package com.finsync.finance.controller;
+
+import com.finsync.finance.model.Category;
+import com.finsync.finance.repository.CategoryRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/categories")
+public class CategoryController {
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    // Add category
+    @PostMapping("/add")
+    public ResponseEntity<Category> addCategory(@RequestBody Category category) {
+        // prevent duplicate names
+        categoryRepository.findByName(category.getName())
+                .ifPresent(c -> {
+                    throw new RuntimeException("Category already exists!");
+                });
+        return ResponseEntity.ok(categoryRepository.save(category));
+    }
+
+    // Get all categories
+    @GetMapping("/all")
+    public ResponseEntity<List<Category>> getAllCategories() {
+        return ResponseEntity.ok(categoryRepository.findAll());
+    }
+
+    // Update category
+    @PutMapping("/{id}")
+    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category category) {
+        Category existing = categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+        existing.setName(category.getName());
+        return ResponseEntity.ok(categoryRepository.save(existing));
+    }
+
+    // Delete category
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteCategory(@PathVariable Long id) {
+        categoryRepository.deleteById(id);
+        return ResponseEntity.ok("Category deleted successfully!");
+    }
+}

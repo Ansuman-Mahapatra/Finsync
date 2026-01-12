@@ -1,0 +1,12 @@
+package com.finsync.finance.repository;
+
+import com.finsync.finance.model.AppUser;
+import com.finsync.finance.model.Report;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface ReportRepository extends JpaRepository<Report, Long> {
+    List<Report> findByUser(AppUser appUser);
+    Report findByUserAndPeriod(AppUser appUser, String period);
+}

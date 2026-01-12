@@ -1,0 +1,8 @@
+{
+  "userId": "test-user-id",
+  "amount": 3500.00,
+  "description": "Monthly Salary",
+  "category": "Income",
+  "type": "income",
+  "date": "2025-10-01T09:00:00"
+}

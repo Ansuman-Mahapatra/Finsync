@@ -1,0 +1,40 @@
+package com.finsync.finance.model;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "reports")
+public class Report {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String period; // e.g. "August 2025"
+    private double totalIncome;
+    private double totalExpense;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private AppUser user;
+
+    public Report() {}
+
+    public Report(String period, double totalIncome, double totalExpense, AppUser appUser) {
+        this.period = period;
+        this.totalIncome = totalIncome;
+        this.totalExpense = totalExpense;
+        this.user = appUser;
+    }
+
+    public Long getId() { return id; }
+    public String getPeriod() { return period; }
+    public double getTotalIncome() { return totalIncome; }
+    public double getTotalExpense() { return totalExpense; }
+    public AppUser getUser() { return user; }
+
+    public void setId(Long id) { this.id = id; }
+    public void setPeriod(String period) { this.period = period; }
+    public void setTotalIncome(double totalIncome) { this.totalIncome = totalIncome; }
+    public void setTotalExpense(double totalExpense) { this.totalExpense = totalExpense; }
+    public void setUser(AppUser appUser) { this.user = appUser; }
+}

@@ -1,0 +1,33 @@
+package com.finsync.finance.service;
+
+import com.finsync.finance.model.Budget;
+import com.finsync.finance.repository.BudgetRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class BudgetService {
+
+    private final BudgetRepository budgetRepository;
+
+    public BudgetService(BudgetRepository budgetRepository) {
+        this.budgetRepository = budgetRepository;
+    }
+
+    public Budget setBudget(Budget budget) {
+        return budgetRepository.save(budget);
+    }
+
+    public List<Budget> getBudgetsByUser(Long userId) {
+        return budgetRepository.findByUserId(userId);
+    }
+
+    public Budget updateBudget(Budget budget) {
+        return budgetRepository.save(budget);
+    }
+
+    public void deleteBudget(Long id) {
+        budgetRepository.deleteById(id);
+    }
+}

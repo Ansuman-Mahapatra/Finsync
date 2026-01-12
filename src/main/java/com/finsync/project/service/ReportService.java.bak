@@ -1,0 +1,62 @@
+package com.finsync.finance.service;
+
+import com.finsync.finance.model.Report;
+import com.finsync.finance.model.AppUser;
+import com.finsync.finance.payload.ReportResponse;
+import com.finsync.finance.repository.ReportRepository;
+import com.finsync.finance.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+@Service
+public class ReportService {
+
+    @Autowired
+    private ReportRepository reportRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public ReportResponse getMonthlyReport(Long userId) {
+        AppUser user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Report> reports = reportRepository.findByUser(user);
+
+        List<Report> monthlyReports = reports.stream()
+                .filter(r -> r.getPeriod().contains("August")) // TODO: replace with real date logic
+                .collect(Collectors.toList());
+
+        return buildResponse("August 2025", monthlyReports);
+    }
+
+    public ReportResponse getWeeklyReport(Long userId) {
+        AppUser user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Report> reports = reportRepository.findByUser(user);
+
+        List<Report> weeklyReports = reports.stream()
+                .filter(r -> r.getPeriod().contains("Week 35")) // TODO: replace with real date logic
+                .collect(Collectors.toList());
+
+        return buildResponse("Week 35", weeklyReports);
+    }
+
+    private ReportResponse buildResponse(String period, List<Report> reports) {
+        double totalIncome = reports.stream().mapToDouble(Report::getTotalIncome).sum();
+        double totalExpense = reports.stream().mapToDouble(Report::getTotalExpense).sum();
+
+        Map<String, Double> categoryBreakdown = new HashMap<>();
+        reports.forEach(r -> {
+            // Dummy: add category breakdown from each report (replace with real logic)
+            categoryBreakdown.put("Food", categoryBreakdown.getOrDefault("Food", 0.0) + 2000);
+            categoryBreakdown.put("Rent", categoryBreakdown.getOrDefault("Rent", 0.0) + 5000);
+        });
+
+        return new ReportResponse(period, totalIncome, totalExpense, categoryBreakdown);
+    }
+}

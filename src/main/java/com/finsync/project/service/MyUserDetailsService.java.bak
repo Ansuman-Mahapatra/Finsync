@@ -1,0 +1,28 @@
+package com.finsync.project.service;
+
+import com.finsync.project.model.AppUser;
+import com.finsync.project.repository.UserRepository;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+@Service
+public class MyUserDetailsService implements UserDetailsService {
+    private final UserRepository userRepository;
+
+    public MyUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String phone) throws UsernameNotFoundException {
+        AppUser appUser = userRepository.findByPhone(phone)
+                .orElseThrow(() -> new UsernameNotFoundException("AppUser not found"));
+        return org.springframework.security.core.userdetails.User
+                .withUsername(appUser.getPhone())
+                .password(appUser.getPassword())
+                .roles("USER")
+                .build();
+    }
+}

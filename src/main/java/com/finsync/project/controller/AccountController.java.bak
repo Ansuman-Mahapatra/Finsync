@@ -1,0 +1,47 @@
+package com.finsync.finance.controller;
+
+import com.finsync.finance.model.BankAccount;
+import com.finsync.finance.model.AppUser;
+import com.finsync.finance.service.AccountService;
+import com.finsync.finance.repository.UserRepository;  // Add the import for UserRepository
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/accounts")
+public class AccountController {
+
+    @Autowired
+    private AccountService accountService;
+
+    @Autowired
+    private UserRepository userRepository;  // Autowire the UserRepository to fetch AppUser
+
+    @GetMapping
+    public ResponseEntity<List<BankAccount>> getAccounts(@RequestParam Long userId) {
+        // Fetch the AppUser object by userId
+        AppUser appUser = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+
+        return ResponseEntity.ok(accountService.getAccounts(appUser));
+    }
+
+    @PostMapping
+    public ResponseEntity<BankAccount> addAccount(@RequestBody BankAccount account) {
+        return ResponseEntity.ok(accountService.addAccount(account));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<BankAccount> updateAccount(@PathVariable Long id, @RequestBody BankAccount account) {
+        return ResponseEntity.ok(accountService.updateAccount(id, account));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteAccount(@PathVariable Long id) {
+        accountService.deleteAccount(id);
+        return ResponseEntity.ok("Bank account deleted successfully!");
+    }
+}

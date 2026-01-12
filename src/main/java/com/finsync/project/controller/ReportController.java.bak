@@ -1,0 +1,31 @@
+package com.finsync.finance.controller;
+
+import com.finsync.finance.payload.ReportResponse;
+import com.finsync.finance.repository.UserRepository;
+import com.finsync.finance.service.ReportService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/reports")
+public class ReportController {
+
+    @Autowired
+    private ReportService reportService;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    // ✅ GET monthly report
+    @GetMapping("/monthly")
+    public ResponseEntity<ReportResponse> getMonthlyReport(@RequestParam Long userId) {
+        return ResponseEntity.ok(reportService.getMonthlyReport(userId));
+    }
+
+    // ✅ GET weekly report
+    @GetMapping("/weekly")
+    public ResponseEntity<ReportResponse> getWeeklyReport(@RequestParam Long userId) {
+        return ResponseEntity.ok(reportService.getWeeklyReport(userId));
+    }
+}
